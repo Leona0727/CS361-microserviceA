@@ -11,8 +11,6 @@ bool testFile1(){ // open file, the question history one
     if (!file.is_open()) {
         return false;
     }
-    
-    // close file
     file.close();
     return true;
 }
@@ -23,7 +21,6 @@ bool testFile2(){ // open file, the question list one
     if (!file.is_open()) {
         return false;
     }
-    
     file.close();
     return true;
 }
@@ -73,8 +70,7 @@ void getString(string& question){
         counter++;
     }
     file.close();
-    
-    cout << counter << endl;
+
     srand(time(0));
     random = rand() % counter + 1; //number of the question is counter
 
@@ -83,7 +79,6 @@ void getString(string& question){
     while (std::getline(myFile, line)) {
         if (index == random){
             question = line;
-            cout << random << endl;
             std::cout << question << std::endl;
         }
         index++;
@@ -91,9 +86,27 @@ void getString(string& question){
     myFile.close();
 }
 
+int countLines(){
+    int counter = 0;
+    std::ifstream file("question-history.txt");
+    std::string line;
+
+    while (std::getline(file, line)) { // count the number of the quiz
+        counter++;
+    }
+
+    if (counter % 2 == 1) {
+        cout << "The history has an error to store the data." << endl;
+    }
+    
+    file.close();
+    return counter;
+}
+
 void task1(){
-    string question, answer;
+    string question, answer, line;
     int random;
+    int counter = countLines();
 
     showDQmessage ();
 
@@ -106,7 +119,13 @@ void task1(){
     // store the data
     fstream myfile;
     myfile.open ("question-history.txt", ios::app);
+
+    if (counter == 0){
+        myfile << question;
+    }
+    else {
     myfile << "\n" << question;
+    }
     myfile << "\n" << answer;
     myfile.close();
 }
@@ -156,23 +175,6 @@ void showPastEntries (string q1, string  q2, string q3){
     cout << "4. Next Page" << endl;
     cout << "5. Go Back" << endl;
     cout << "Which feature would you like to access? (1-5)" << endl;
-}
-
-int countLines(){
-    int counter = 0;
-    std::ifstream file("question-history.txt");
-    std::string line;
-
-    while (std::getline(file, line)) { // count the number of the quiz
-        counter++;
-    }
-
-    if (counter % 2 == 1) {
-        cout << "The history has an error to store the data." << endl;
-    }
-    
-    file.close();
-    return counter;
 }
 
 void task2(){
